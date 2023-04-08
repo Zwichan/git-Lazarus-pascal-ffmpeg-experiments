@@ -21,7 +21,7 @@
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
         <TopLine Value="10"/>
-        <CursorPos Y="18"/>
+        <CursorPos X="5" Y="26"/>
         <UsageCount Value="200"/>
         <Bookmarks Count="3">
           <Item0 Y="199" ID="1"/>
@@ -201,10 +201,9 @@
       </Unit>
       <Unit>
         <Filename Value="..\shared\shortfftypes.pas"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="16"/>
         <UsageCount Value="47"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\ffmpeg-delphi-pascal-headers-5.0\libavformat.pas"/>
