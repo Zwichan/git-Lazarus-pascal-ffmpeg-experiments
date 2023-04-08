@@ -2,7 +2,7 @@
 # ffmpeg experiment with OpenGL in Lazarus free pascal
 
 This is the best I can do with OpenGL. I reach just below 60 fps on i7 2600K with Radeon RX570.
-I'm definitely no OpenGL or ffmpeg expert, just glad got this working with lots of searching and experimenting. So maybe there are must faster and simpler solutions...
+  I'm definitely no OpenGL or ffmpeg expert, just glad got this working with lots of searching and experimenting. So maybe there are much faster and simpler solutions...
 
 This is just a study project, not very GUI responsive, probably with memory leaks. 
 
