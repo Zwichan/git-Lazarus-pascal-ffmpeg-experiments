@@ -1,16 +1,16 @@
-unit p03_unit1;
+unit p04_unit1;
 
 {$mode objfpc}
 {$H+}
+//{$mode delphi}
 
 
 interface
 uses
   Classes, SysUtils, Forms, Controls, Dialogs, StdCtrls, ExtCtrls, ComCtrls,
-  Grids, dateutils, ctypes, libavformat, libavutil, fftypes, BGRABitmap, BGRABITMAPTYPES, BGRAOpenGL,
-  libavcodec_codec_par, libavcodec_codec, libavcodec_codec_id, libavcodec_packet,
-  libavcodec_codec_defs, libavutil_rational, libavutil_error, libavutil_pixfmt, OpenGLContext, Windows, Graphics,
-  libavutil_imgutils, libavutil_mem, libswscale, libavcodec, libavutil_frame;
+  Grids, dateutils, libavformat, libavutil, libavcodec_codec_par, libavcodec_codec, libavcodec_packet,
+   libavutil_rational, libavutil_error, libavutil_pixfmt, Windows, Graphics,
+  libavutil_imgutils, libswscale, libavcodec, libavutil_frame;
 type
 
   { TForm1 }
@@ -22,21 +22,22 @@ type
     Edit3: TEdit;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
+    Image1: TImage;
     Label1: TLabel;
+    Label2: TLabel;
     Memo1: TMemo;
     Memo2: TMemo;
-    OpenGLControl1: TOpenGLControl;
+    PaintBox1: TPaintBox;
+    RadioGroup2: TRadioGroup;
+    RadioGroup3: TRadioGroup;
     StringGrid1: TStringGrid;
     StringGrid2: TStringGrid;
     procedure Button1Click(Sender: TObject);
-    procedure OpenGLControl1Paint(Sender: TObject);
   private
-    procedure Frame32ToBGLBitmap(const aWidth, aHeight: integer);
-    function main(filename: pansichar): integer;
-    function ReadingPackets01(packet: PAVPacket; vframe: PAVFrame; pFormatCtx: PAVFormatContext; vidId, audId: integer; vidCtx, audCtx: PAVCodecContext): boolean;
+    procedure RenderRelevantBitmap;
     procedure ShowDLLInfo;
     procedure WorkOnMyFrame(pFrame: PAVFrame; pCodecCtx: PAVCodecContext);
-    procedure WorkOnVideoPacket01(ctx: PAVCodecContext; pkt: PAVPacket; locvframe: PAVFrame);
+
   public
 
   end;
@@ -50,14 +51,24 @@ var
   G_timebase: double;
   G_QPF1000: int64;//queryperformanceFrequency;
   G_TimerStartTick: int64;
+  {variables for RGB approach}
+  G_RGBFrame24: PAVFrame = nil;
   G_RGBFrame32: PAVFrame = nil;
-  G_MyBGLBitmap: TBGLBitmap;  //in BGRAOpenGL
-  G_OpenGLTexture: IBGLTexture;
+  G_MyBitmap24: TBitmap; {from graphics unit, in 'uses' graphics should come after windows}
+  G_MyBitmap32: TBitmap; {from graphics unit, in 'uses' graphics should come after windows}
+  G_pCurrentBitmap: ^TBitmap;
+  swsCtx24: PSwsContext;
   swsCtx32: PSwsContext;
+
+procedure WorkOnVideoPacket01(ctx: PAVCodecContext; pkt: PAVPacket; locvframe: PAVFrame);
 procedure WorkOnAudioPacket(ctx: PAVCodecContext; pkt: PAVPacket);
+function main(filename: pansichar): integer;
+function ReadingPackets01(packet: PAVPacket; vframe: PAVFrame; pFormatCtx: PAVFormatContext; vidId, audId: integer; vidCtx, audCtx: PAVCodecContext): boolean;
+
 procedure PrintFrameInfoAtIntervals(locvframe: PAVFrame; nu: double);
 function TimerStart: boolean;
 procedure VideoFrameDelay(locvframe: PAVFrame; nu: double);
+procedure InitializeRGBFrame24(awidth, aheight: integer);
 procedure InitializeRGBFrame32(awidth, aheight: integer);
 
 implementation
@@ -68,7 +79,6 @@ implementation
  decoder). In such a case, av_frame_unref() will free any references held by
  the frame and reset it to its original clean state before it
  is reused again.}
-
 
 function TimerStart: boolean;
 begin
@@ -120,7 +130,7 @@ begin
 end;
 
 
-function TForm1.main(filename: pansichar): integer;
+function main(filename: pansichar): integer;
 var
   vframe, aframe: PAVFrame;
   packet: PAVPacket;
@@ -145,17 +155,21 @@ begin
   vheight := pFormatCtx^.streams[vidId]^.codecpar^.Height;
   vwidth := pFormatCtx^.streams[vidId]^.codecpar^.Width;
 
-
   {setup some stuff now that heigth and width are known:}
+  G_MyBitmap24 := TBitmap.Create;  {for RGB approach}
+  G_MyBitmap24.PixelFormat := pf24bit;
+  G_MyBitmap24.SetSize(vWidth, vHeight);
+  InitializeRGBFrame24(vwidth, vheight);
 
+
+  G_MyBitmap32 := TBitmap.Create;
+  G_MyBitmap32.PixelFormat := pf32bit;
+  G_MyBitmap32.SetSize(vWidth, vHeight);
   InitializeRGBFrame32(vwidth, vheight);
-
-  G_MyBGLBitmap := TBGLBitmap.Create;
-  G_MyBGLBitmap.SetSize(vWidth, vHeight);
-  BGLViewPort(vWidth, vHeight); {works on the only single OpenGL stuff present in the app, like a TOpenGLControl added to the Form}
 
 
   {here I assume AV_PIX_FMTY_UV420P source format. You can get it from frame.pixelformat, but then you would first have to read frame...}
+  swsCtx24 := sws_getContext(vwidth, vheight, AV_PIX_FMT_YUV420P, vwidth, vheight, AV_PIX_FMT_RGB24, SWS_BILINEAR, nil, nil, nil);
   swsCtx32 := sws_getContext(vwidth, vheight, AV_PIX_FMT_YUV420P, vwidth, vheight, AV_PIX_FMT_BGRA, SWS_BILINEAR, nil, nil, nil);
   {alloc and the main loop:}
   vframe := av_frame_alloc(); //note this only allocates the AVFrame itself, NOT the data buffers
@@ -177,8 +191,9 @@ end;
 
 
 
-function TForm1.ReadingPackets01(packet: PAVPacket; vframe: PAVFrame; pFormatCtx: PAVFormatContext; vidId, audId: integer; vidCtx, audCtx: PAVCodecContext): boolean;
+function ReadingPackets01(packet: PAVPacket; vframe: PAVFrame; pFormatCtx: PAVFormatContext; vidId, audId: integer; vidCtx, audCtx: PAVCodecContext): boolean;
 begin
+
   while (av_read_frame(pFormatCtx, packet) >= 0) do  {here starts the BIG outer loop that reads all frames/packets}
   begin
     if packet^.stream_index = vidId then  WorkOnVideoPacket01(vidCtx, packet, vframe);
@@ -196,7 +211,7 @@ begin
   form1.edit3.Refresh;
 end;
 
-procedure TForm1.WorkOnVideoPacket01(ctx: PAVCodecContext; pkt: PAVPacket; locvframe: PAVFrame);
+procedure WorkOnVideoPacket01(ctx: PAVCodecContext; pkt: PAVPacket; locvframe: PAVFrame);
 var
   nu: double;
 begin
@@ -211,40 +226,6 @@ begin
   PrintFrameInfoAtIntervals(locvframe, nu);
 end;
 
-
-procedure TForm1.Frame32ToBGLBitmap(const aWidth, aHeight: integer);
-var
-  y: integer;
-  RGBPtr, BitmapPtr: pbyte;
-  BytesPerScanline: integer;
-begin
-  BytesPerScanline := aWidth * 4; {TBGLBitmap is like pf32bit, 24 not possibl I think}
-  {comment: G_MyBGLBitmap.Bitmap.BeginUpdate(False); etc does not seem to speed up stuff}
-  for y := 0 to aHeight - 1 do
-  begin
-    RGBPtr := pbyte(G_RGBFrame32^.Data[0] + y * G_RGBFrame32^.linesize[0]);
-    BitmapPtr := pbyte(G_MyBGLBitmap.ScanLine[y]);
-    Move(RGBPtr^, BitmapPtr^, BytesPerScanline);
-  end;
-
-end;
-
-
-procedure TForm1.WorkOnMyFrame(pFrame: PAVFrame; pCodecCtx: PAVCodecContext);
-begin
-  if G_Startset = False then {IMPORTANT, start timer when first frame gets displayed}
-  begin
-    TimerStart;
-    G_Startset := True;
-  end;
-  {convert YUV data in pFrame to RGB data in G_RGBFrame32:}
-  sws_scale(swsCtx32, @pFrame^.Data, @pFrame^.linesize, 0, pCodecCtx^.Height, @G_RGBFrame32^.Data, @G_RGBFrame32^.linesize);
-  Frame32ToBGLBitmap(pCodecCtx^.Width, pCodecCtx^.Height); {works on the global G_MyBGLBitmap}
-  G_MyBGLBitmap.Bitmap.Handle; {does nothing, by coincidence I found you have to do something with the Bitmap, like get the handle, else not working}
-  G_OpenGLTexture := G_MyBGLBitmap.Texture;// not  MakeTextureAndFree because that frees the G_MyBGLBitmap
-  G_OpenGLTexture.Draw(0, 0, 255); {this just draws to the open context that is present in the application after placing TOpenGLControl..very 'misty'}
-  OpenGLControl1.SwapBuffers;
-end;
 
 procedure WorkOnAudioPacket(ctx: PAVCodecContext; pkt: PAVPacket);
 begin
@@ -299,7 +280,6 @@ begin
 end;
 
 
-
 procedure TForm1.Button1Click(Sender: TObject);
 var
   ret: integer;
@@ -321,8 +301,18 @@ begin
   end;
   memo1.Lines.add(s);
 end;
+procedure InitializeRGBFrame24(awidth, aheight: integer);
+begin
+  if not Assigned(G_RGBFrame24) then
+    G_RGBFrame24 := av_frame_alloc();
+  av_image_alloc(G_RGBFrame24^.Data, G_RGBFrame24^.linesize, awidth, aheight, AV_PIX_FMT_RGB24, 1);
 
-{for RGB approach}
+  G_RGBFrame24^.Width := awidth;
+  G_RGBFrame24^.Height := aheight;
+
+
+  G_RGBFrame24^.format := longint(AV_PIX_FMT_RGB24);
+end;
 
 procedure InitializeRGBFrame32(awidth, aheight: integer);
 begin
@@ -334,12 +324,110 @@ begin
   G_RGBFrame32^.format := longint(AV_PIX_FMT_BGRA);
 end;
 
-
-
-procedure TForm1.OpenGLControl1Paint(Sender: TObject);
+procedure InitializeScalingContext24(awidth, aheight: integer; src_fmt, dst_fmt: TAVPixelFormat);
 begin
+  if Assigned(swsCtx24) then
+    sws_freeContext(swsCtx24);
+  swsCtx24 := sws_getContext(awidth, aheight, AV_PIX_FMT_YUV420P, awidth, aheight, AV_PIX_FMT_RGB24, SWS_BILINEAR, nil, nil, nil);
+  form1.memo1.Lines.add('Init InitializeScalingContext');
 end;
 
+procedure Frame24ToBitmap24;
+var
+  y: integer;
+  RGBPtr, BitmapPtr: pbyte;
+  BytesPerScanline: integer;
+begin
+  BytesPerScanline := G_MyBitmap24.Width * 3;
+  G_MyBitmap24.BeginUpdate;
+  for y := 0 to G_MyBitmap24.Height - 1 do
+  begin
+    RGBPtr := pbyte(G_RGBFrame24^.Data[0] + y * G_RGBFrame24^.linesize[0]);
+    BitmapPtr := G_MyBitmap24.ScanLine[y];
+    Move(RGBPtr^, BitmapPtr^, BytesPerScanline);
+  end;
+  G_MyBitmap24.EndUpdate;
+end;
+
+procedure Frame32ToBitMap32;
+var
+  y: integer;
+  RGBPtr, BitmapPtr: pbyte;
+  BytesPerScanline: integer;
+begin
+  BytesPerScanline := G_MyBitmap32.Width * 4;
+
+  G_MyBitmap32.BeginUpdate;
+  for y := 0 to G_MyBitmap32.Height - 1 do
+  begin
+    RGBPtr := pbyte(G_RGBFrame32^.Data[0] + y * G_RGBFrame32^.linesize[0]);
+    BitmapPtr := G_MyBitmap32.ScanLine[y];
+    Move(RGBPtr^, BitmapPtr^, BytesPerScanline);
+  end;
+  G_MyBitmap32.EndUpdate;
+end;
+
+procedure SwapRedBlue(Bitmap: TBitmap);
+var
+  x, y: integer;
+  Scanline: pbyte;
+  Temp: byte;
+begin
+  Bitmap.PixelFormat := pf24bit;
+  for y := 0 to Bitmap.Height - 1 do
+  begin
+    Scanline := Bitmap.ScanLine[y];
+    for x := 0 to Bitmap.Width - 1 do
+    begin
+      // Swap red and blue components
+      Temp := Scanline^;
+      Scanline^ := (Scanline + 2)^;
+      (Scanline + 2)^ := Temp;
+      Inc(Scanline, 3);
+    end;
+  end;
+end;
+
+procedure TForm1.WorkOnMyFrame(pFrame: PAVFrame; pCodecCtx: PAVCodecContext);
+begin
+  if G_Startset = False then {IMPORTANT, start timer when first frame gets displayed}
+  begin
+    TimerStart;
+    G_Startset := True;
+  end;
+
+  if RadioGroup2.ItemIndex = 0 then
+  begin
+    sws_scale(swsCtx24, @pFrame^.Data, @pFrame^.linesize, 0, pCodecCtx^.Height, @G_RGBFrame24^.Data, @G_RGBFrame24^.linesize);
+    Frame24ToBitmap24;
+    SwapRedBlue(G_MyBitmap24);
+    G_pCurrentBitmap := @G_MyBitmap24; {using pointer here for the right bitmap}
+  end;
+
+  if RadioGroup2.ItemIndex = 1 then
+  begin
+    sws_scale(swsCtx32, @pFrame^.Data, @pFrame^.linesize, 0, pCodecCtx^.Height, @G_RGBFrame32^.Data, @G_RGBFrame32^.linesize);
+    Frame32ToBitMap32;
+    G_pCurrentBitmap := @G_MyBitmap32;
+  end;
+  RenderRelevantBitmap;
+end;
+
+procedure TForm1.RenderRelevantBitmap;
+begin
+  if RadioGroup3.ItemIndex = 0 then
+  begin
+    PaintBox1.Canvas.draw(0, 0, G_pCurrentBitmap^);
+    PaintBox1.Invalidate;
+  end;
+
+  if RadioGroup3.ItemIndex = 1 then
+  begin
+    image1.Picture.Assign(G_pCurrentBitmap^);
+    image1.Refresh;
+  end;
+
+end;
 
 
 
