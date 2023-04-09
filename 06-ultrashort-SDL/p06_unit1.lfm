@@ -1,0 +1,39 @@
+object Form1: TForm1
+  Left = 946
+  Height = 1131
+  Top = 134
+  Width = 1453
+  Caption = 'ffmpeg decoding with SDL display - just a study to show what I found and help along..'
+  ClientHeight = 1131
+  ClientWidth = 1453
+  DesignTimePPI = 120
+  LCLVersion = '2.1.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 1086
+    Top = 45
+    Width = 1453
+    Align = alClient
+    Caption = 'Panel1'
+    TabOrder = 0
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 45
+    Top = 0
+    Width = 1453
+    Align = alTop
+    ClientHeight = 45
+    ClientWidth = 1453
+    TabOrder = 1
+    object Button1: TButton
+      Left = 27
+      Height = 31
+      Top = 8
+      Width = 94
+      Caption = 'Start'
+      OnClick = Button1Click
+      TabOrder = 0
+    end
+  end
+end
