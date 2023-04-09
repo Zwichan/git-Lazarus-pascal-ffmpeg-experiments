@@ -1,0 +1,196 @@
+object Form1: TForm1
+  Left = 787
+  Height = 1131
+  Top = 178
+  Width = 1453
+  Caption = 'ffmpeg decoding with SDL display - just a study to show what I found and help along..'
+  ClientHeight = 1131
+  ClientWidth = 1453
+  DesignTimePPI = 120
+  LCLVersion = '2.1.0.0'
+  object Button1: TButton
+    Left = 27
+    Height = 31
+    Top = 8
+    Width = 94
+    Caption = 'Start'
+    OnClick = Button1Click
+    TabOrder = 0
+  end
+  object Memo1: TMemo
+    Left = 1021
+    Height = 189
+    Top = 191
+    Width = 407
+    Lines.Strings = (
+      'Memo1'
+    )
+    TabOrder = 1
+  end
+  object GroupBox1: TGroupBox
+    Left = 307
+    Height = 131
+    Top = 49
+    Width = 583
+    Caption = 'DLL locations'
+    ClientHeight = 109
+    ClientWidth = 579
+    Font.Height = -13
+    ParentFont = False
+    TabOrder = 2
+    object Memo2: TMemo
+      Left = 0
+      Height = 109
+      Top = 0
+      Width = 579
+      Align = alClient
+      Font.Height = -13
+      ParentFont = False
+      TabOrder = 0
+    end
+  end
+  object StringGrid2: TStringGrid
+    Left = 307
+    Height = 183
+    Top = 191
+    Width = 703
+    Columns = <    
+      item
+        Title.Caption = 'pkt_size'
+      end    
+      item
+        Title.Caption = 'coded_picture_number'
+      end    
+      item
+        Title.Caption = 'Title'
+      end    
+      item
+        Title.Caption = 'Title'
+      end    
+      item
+        Title.Caption = 'Title'
+      end>
+    FixedCols = 0
+    Font.Height = -13
+    ParentFont = False
+    RowCount = 1
+    TabOrder = 3
+  end
+  object GroupBox2: TGroupBox
+    Left = 14
+    Height = 328
+    Top = 49
+    Width = 287
+    Caption = 'Timing'
+    ClientHeight = 306
+    ClientWidth = 283
+    Font.Height = -13
+    ParentFont = False
+    TabOrder = 4
+    object StringGrid1: TStringGrid
+      Left = 0
+      Height = 306
+      Top = 0
+      Width = 283
+      Align = alClient
+      ColCount = 2
+      Columns = <      
+        item
+          Alignment = taRightJustify
+          Title.Caption = 'frame dts'
+        end      
+        item
+          Alignment = taRightJustify
+          Title.Caption = 'diff (ms)'
+        end>
+      FixedCols = 0
+      Font.Height = -13
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSpanning, goSmoothScroll]
+      ParentFont = False
+      RowCount = 1
+      TabOrder = 0
+    end
+  end
+  object Edit1: TEdit
+    Left = 157
+    Height = 28
+    Top = 8
+    Width = 541
+    TabOrder = 5
+    Text = 'Edit1'
+  end
+  object Edit2: TEdit
+    Left = 710
+    Height = 28
+    Top = 10
+    Width = 604
+    TabOrder = 6
+    Text = 'Edit2'
+  end
+  object Edit3: TEdit
+    Left = 1189
+    Height = 28
+    Hint = 'Average since start of playing'
+    Top = 63
+    Width = 149
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 7
+    Text = 'Edit3'
+  end
+  object CheckBox1: TCheckBox
+    Left = 1153
+    Height = 24
+    Top = 92
+    Width = 183
+    Caption = 'Use delay to pace video'
+    TabOrder = 8
+  end
+  object RadioGroup2: TRadioGroup
+    Left = 906
+    Height = 81
+    Top = 43
+    Width = 231
+    AutoFill = True
+    Caption = 'SDL setup'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 56
+    ClientWidth = 227
+    ItemIndex = 0
+    Items.Strings = (
+      '0 Embedded SDL frame'
+      '1 Separate window SDL'
+    )
+    TabOrder = 9
+  end
+  object Panel1: TPanel
+    Left = 103
+    Height = 703
+    Top = 390
+    Width = 1216
+    Caption = 'Panel1'
+    TabOrder = 10
+  end
+  object Label1: TLabel
+    Left = 1152
+    Height = 20
+    Top = 66
+    Width = 20
+    Caption = 'fps'
+    ParentColor = False
+  end
+  object Label2: TLabel
+    Left = 1149
+    Height = 20
+    Top = 43
+    Width = 226
+    Caption = 'Average fps since start of playing..'
+    ParentColor = False
+  end
+end
