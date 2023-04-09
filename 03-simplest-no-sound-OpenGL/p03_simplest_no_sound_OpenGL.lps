@@ -19,8 +19,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="175"/>
-        <CursorPos Y="40"/>
+        <TopLine Value="174"/>
+        <CursorPos X="53" Y="184"/>
         <UsageCount Value="200"/>
         <Bookmarks Count="3">
           <Item0 Y="51" ID="3"/>
@@ -334,7 +334,7 @@
         <UsageCount Value="16"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
+    <JumpHistory HistoryIndex="28">
       <Position>
         <Filename Value="p03_unit1.pas"/>
         <Caret Line="284" TopLine="267"/>
@@ -394,10 +394,6 @@
       <Position>
         <Filename Value="p03_unit1.pas"/>
         <Caret Line="303" TopLine="276"/>
-      </Position>
-      <Position>
-        <Filename Value="p03_unit1.pas"/>
-        <Caret Line="17" Column="28" TopLine="25"/>
       </Position>
       <Position>
         <Filename Value="p03_unit1.pas"/>

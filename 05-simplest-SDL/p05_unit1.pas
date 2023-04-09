@@ -42,9 +42,9 @@ var
   G_FileFrameRate: integer;
   G_RunningFramecount: integer;
   G_Startset: boolean;
-  G_screen: PSDL_Window;
-  G_renderer: PSDL_Renderer;
-  G_texture: PSDL_Texture;
+  myPSDL_Window: PSDL_Window;
+  myPSDL_Renderer: PSDL_Renderer;
+  myPSDL_Texture: PSDL_Texture;
   G_rect: TSDL_Rect;
   G_TargetRect: TSDL_Rect;
   G_windowID: uint32;
@@ -57,6 +57,8 @@ function main(filename: pansichar): integer;
 function CheckSDLStillRunning: boolean;
 function SDL_memset(dst: Pointer; c: integer; len: size_t): Pointer; cdecl; external 'SDL2.dll';
 function ReadingPackets01(packet: PAVPacket; vframe: PAVFrame; pFormatCtx: PAVFormatContext; vidId, audId: integer; vidCtx, audCtx: PAVCodecContext): boolean;
+function GetStreamIDs02(const locPAVFormatContext: PAVFormatContext; out vidId, audId: integer; out myPAVCodecContext_v, myPAVCodecContext_a: PAVCodecContext): integer;
+
 procedure PrintFrameInfoAtIntervals(locvframe: PAVFrame; nu: double);
 function TimerStart: boolean;
 procedure VideoFrameDelay(locvframe: PAVFrame; nu: double);
@@ -66,12 +68,6 @@ function SetUpSDLEmbedded(swidth, sheight: integer): integer;
 implementation
 
 {$R *.lfm}
-{ AVFrame is typically allocated once and then reused multiple times to hold
- different data (e.g. a single AVFrame to hold frames received from a
- decoder). In such a case, av_frame_unref() will free any references held by
- the frame and reset it to its original clean state before it
- is reused again.}
-
 procedure sdl_zero(var x: Pointer; size: SizeUInt);
 begin
   SDL_memset(x, 0, size);
@@ -88,52 +84,40 @@ begin
   QueryPerformanceCounter(nunu);
   Result := (nunu - G_TimerStartTick) / G_QPF1000;
 end;
-function GetStreamIDs01(pFormatCtx: PAVFormatContext; out vidId, audId: integer): integer;
+
+function GetStreamIDs02(const locPAVFormatContext: PAVFormatContext; out vidId, audId: integer; out myPAVCodecContext_v, myPAVCodecContext_a: PAVCodecContext): integer;
 var
   i: integer;
+  myPAVCodec_v: PAVCodec;
+  myPAVCodec_a: PAVCodec;
 begin
   Result := -1;
-  if (avformat_find_stream_info(pFormatCtx, nil) < 0) then Exit(2);
+  if (avformat_find_stream_info(locPAVFormatContext, nil) < 0) then Exit(2);
   vidId := -1; audId := -1;
-  for i := 0 to pFormatCtx^.nb_streams - 1 do
-    if (pFormatCtx^.streams[i]^.codecpar^.codec_type = AVMEDIA_TYPE_VIDEO) then
-      if (vidId = -1) then vidId := i;
-  for i := 0 to pFormatCtx^.nb_streams - 1 do
-    if (pFormatCtx^.streams[i]^.codecpar^.codec_type = AVMEDIA_TYPE_AUDIO) then
-      if (audId = -1) then audId := i;
-end;
-function SetUpVideoContext(pFormatCtx: PAVFormatContext; vidId: integer; out vidCtx: PAVCodecContext): integer;
-var
-  vidCodec: PAVCodec;
-begin
-  Result := -1;
-  vidCodec := avcodec_find_decoder(pFormatCtx^.streams[vidId]^.codecpar^.codec_id);
-  vidCtx := avcodec_alloc_context3(vidCodec);
-  form1.edit2.Caption := vidCodec^.long_name;
-  if (avcodec_parameters_to_context(vidCtx, pFormatCtx^.streams[vidId]^.codecpar) < 0) then Exit(3);
-  if (avcodec_open2(vidCtx, vidCodec, nil) < 0) then Exit(5);
+
+  vidId := av_find_best_stream(locPAVFormatContext, AVMEDIA_TYPE_VIDEO, -1, -1, @myPAVCodec_v, 0);   {=find_stream_info + find_decoder}
+  myPAVCodecContext_v := avcodec_alloc_context3(myPAVCodec_v);
+  avcodec_parameters_to_context(myPAVCodecContext_v, locPAVFormatContext^.streams[vidId]^.codecpar);
+  avcodec_open2(myPAVCodecContext_v, myPAVCodec_v, nil);
+  form1.edit2.Caption := myPAVCodec_v^.long_name;
+
+  audId := av_find_best_stream(locPAVFormatContext, AVMEDIA_TYPE_AUDIO, -1, -1, @myPAVCodec_a, 0);
+  myPAVCodecContext_a := avcodec_alloc_context3(myPAVCodec_a);
+  if (avcodec_parameters_to_context(myPAVCodecContext_a, locPAVFormatContext^.streams[audId]^.codecpar) < 0) then Exit(4);
+  if (avcodec_open2(myPAVCodecContext_a, myPAVCodec_a, nil) < 0) then  Exit(6);
+  form1.edit1.Caption := myPAVCodec_a^.long_name;
 end;
 
-function SetUpAudioContext(pFormatCtx: PAVFormatContext; audId: integer; out audCtx: PAVCodecContext): integer;
-var
-  audCodec: PAVCodec;
-begin
-  Result := -1;
-  audCodec := avcodec_find_decoder(pFormatCtx^.streams[audId]^.codecpar^.codec_id);
-  audCtx := avcodec_alloc_context3(audCodec);
-  form1.edit1.Caption := audCodec^.long_name;
-  if (avcodec_parameters_to_context(audCtx, pFormatCtx^.streams[audId]^.codecpar) < 0) then Exit(4);
-  if (avcodec_open2(audCtx, audCodec, nil) < 0) then  Exit(6);
-end;
+
 
 
 function main(filename: pansichar): integer;
 var
   vframe, aframe: PAVFrame;
   packet: PAVPacket;
-  pFormatCtx: PAVFormatContext;
+  myPAVFormatContext: PAVFormatContext;
   vidId, audId: integer;
-  vidCtx, audCtx: PAVCodecContext;
+  myPAVCodecContext_v, myPAVCodecContext_a: PAVCodecContext;
   ret: integer;
   vheight, vwidth: integer;
 begin
@@ -141,60 +125,63 @@ begin
   G_QPF1000 := round(G_QPF1000 / 1000);
 
   Result := 0;
-  pFormatCtx := avformat_alloc_context();
-  if (avformat_open_input(@pFormatCtx, filename, nil, nil) < 0) then Exit(1);
-  ret := GetStreamIDs01(pFormatCtx, vidId, audId); if ret <> -1 then Exit(ret);  {vidId, audId are out values to get}
-  G_timebase := av_q2d(pFormatCtx^.streams[vidId]^.time_base);
-  G_FileFrameRate := round(pFormatCtx^.streams[vidId]^.avg_frame_rate.num / pFormatCtx^.streams[vidId]^.avg_frame_rate.den);
+  myPAVFormatContext := avformat_alloc_context();
+  if (avformat_open_input(@myPAVFormatContext, filename, nil, nil) < 0) then Exit(1);
+  ret := GetStreamIDs02(myPAVFormatContext, vidId, audId, myPAVCodecContext_v, myPAVCodecContext_a); if ret <> -1 then Exit(ret);  {vidId, audId are out values to get}
 
-  ret := SetUpVideoContext(pFormatCtx, vidId, vidCtx);if ret <> -1 then Exit(ret);
-  ret := SetUpAudioContext(pFormatCtx, audId, audCtx);if ret <> -1 then Exit(ret);
-  vheight := pFormatCtx^.streams[vidId]^.codecpar^.Height;
-  vwidth := pFormatCtx^.streams[vidId]^.codecpar^.Width;
+
+  G_timebase := av_q2d(myPAVFormatContext^.streams[vidId]^.time_base);
+  G_FileFrameRate := round(myPAVFormatContext^.streams[vidId]^.avg_frame_rate.num / myPAVFormatContext^.streams[vidId]^.avg_frame_rate.den);
+
+  vheight := myPAVFormatContext^.streams[vidId]^.codecpar^.Height;
+  vwidth := myPAVFormatContext^.streams[vidId]^.codecpar^.Width;
 
   if Form1.RadioGroup2.ItemIndex = 0 then
   begin
     ret := SetUpSDLEmbedded(vwidth, vheight);
-    if ret <> -1 then Exit(ret); end;
+    if ret <> -1 then Exit(ret);
+  end;
 
   if Form1.RadioGroup2.ItemIndex = 1 then
-    begin ret := SetUpSDLStandAlone(vwidth, vheight);
-    if ret <> -1 then Exit(ret); end;
+  begin
+    ret := SetUpSDLStandAlone(vwidth, vheight);
+    if ret <> -1 then Exit(ret);
+  end;
   {alloc and the main loop:}
   vframe := av_frame_alloc(); //note this only allocates the AVFrame itself, NOT the data buffers
   aframe := av_frame_alloc();
   packet := av_packet_alloc();
   G_RunningFramecount := 0;
 
-    if G_Startset = False then {IMPORTANT, start timer when first frame gets displayed}
+  if G_Startset = False then {IMPORTANT, start timer when first frame gets displayed}
   begin
     TimerStart;
     G_Startset := True;
   end;
   {after setting up, here comes the time critical loop:}
-  ReadingPackets01(packet, vframe, pFormatCtx, vidID, audId, vidCtx, audCtx);
+  ReadingPackets01(packet, vframe, myPAVFormatContext, vidID, audId, myPAVCodecContext_v, myPAVCodecContext_a);
 
   {cleaning up}
-  SDL_DestroyTexture(G_texture);
-  SDL_DestroyRenderer(G_renderer);
-  SDL_DestroyWindow(G_screen);
+  SDL_DestroyTexture(myPSDL_Texture);
+  SDL_DestroyRenderer(myPSDL_Renderer);
+  SDL_DestroyWindow(myPSDL_Window);
   av_packet_free(@packet);
   av_frame_free(@vframe);
   av_frame_free(@aframe);
-  avcodec_free_context(@vidCtx);
-  avcodec_free_context(@audCtx);
-  avformat_close_input(@pFormatCtx);
-  avformat_free_context(pFormatCtx);
+  avcodec_free_context(@myPAVCodecContext_v);
+  avcodec_free_context(@myPAVCodecContext_a);
+  avformat_close_input(@myPAVFormatContext);
+  avformat_free_context(myPAVFormatContext);
 end;
 
 
 
 function ReadingPackets01(packet: PAVPacket; vframe: PAVFrame; pFormatCtx: PAVFormatContext; vidId, audId: integer; vidCtx, audCtx: PAVCodecContext): boolean;
 begin
-   while (av_read_frame(pFormatCtx, packet) >= 0) do  {here starts the BIG outer loop that reads all frames/packets}
+  while (av_read_frame(pFormatCtx, packet) >= 0) do  {here starts the BIG outer loop that reads all frames/packets}
   begin
-      if (vframe^.coded_picture_number mod 20 = 0) then {only check every so many frames...}
-        if CheckSDLStillRunning = False then Break;
+    if (vframe^.coded_picture_number mod 20 = 0) then {only check every so many frames...}
+      if CheckSDLStillRunning = False then Break;
     if packet^.stream_index = vidId then  WorkOnVideoPacket01(vidCtx, packet, vframe);
     //if packet^.stream_index = audId then  WorkOnAudioPacket(audCtx, packet);
     av_packet_unref(packet);
@@ -238,17 +225,17 @@ var
 begin
   if avcodec_send_packet(ctx, pkt) < 0 then  Exit;
   if avcodec_receive_frame(ctx, locvframe) < 0 then  Exit;
-  SDL_UpdateYUVTexture(G_texture, @G_rect, locvframe^.Data[0], locvframe^.linesize[0], locvframe^.Data[1], locvframe^.linesize[1], locvframe^.Data[2], locvframe^.linesize[2]);
-  SDL_RenderClear(G_renderer);
-  SDL_RenderCopy(G_renderer, G_texture, nil, @G_TargetRect);
-  SDL_RenderPresent(G_renderer);
+  SDL_UpdateYUVTexture(myPSDL_Texture, @G_rect, locvframe^.Data[0], locvframe^.linesize[0], locvframe^.Data[1], locvframe^.linesize[1], locvframe^.Data[2], locvframe^.linesize[2]);
+  SDL_RenderClear(myPSDL_Renderer);
+  SDL_RenderCopy(myPSDL_Renderer, myPSDL_Texture, nil, @G_TargetRect);
+  SDL_RenderPresent(myPSDL_Renderer);
 
 
 
   Inc(G_RunningFramecount);
   nu := GetTimer;
-  if G_RunningFramecount mod 60=0 then
-  PrintFPS(nu);
+  if G_RunningFramecount mod 60 = 0 then
+    PrintFPS(nu);
   if form1.CheckBox1.Checked then
     VideoFrameDelay(locvframe, nu);  //<-----------------DELAY !!!!!!!!!!!!!
   PrintFrameInfoAtIntervals(locvframe, nu);
@@ -283,7 +270,7 @@ begin
   begin
     form1.StringGrid2.InsertRowWithValues(form1.StringGrid2.RowCount, [locvframe^.pkt_size.ToString, locvframe^.coded_picture_number.ToString, locvframe^.display_picture_number.ToString]);
     form1.StringGrid2.row := form1.StringGrid2.RowCount;
-   VideotimeInMs := locvframe^.best_effort_timestamp * 1000 * G_timebase;
+    VideotimeInMs := locvframe^.best_effort_timestamp * 1000 * G_timebase;
     form1.StringGrid1.InsertRowWithValues(form1.StringGrid1.RowCount, [FloatToStrF(VideotimeInMs / 1000, ffFixed, 3, 3), FloatToStrF(VideotimeInMs - nu, ffFixed, 3, 1)]);
     form1.StringGrid1.row := form1.StringGrid1.RowCount;
     form1.StringGrid1.Refresh;
@@ -329,52 +316,77 @@ begin
     9: s := ' Could not make a texture := SDL_CreateTexture(';
   end;
   memo1.Lines.add(s);
-  SDL_DestroyTexture(G_texture);
-  SDL_DestroyRenderer(G_renderer);
-  SDL_DestroyWindow(G_screen);
+  SDL_DestroyTexture(myPSDL_Texture);
+  SDL_DestroyRenderer(myPSDL_Renderer);
+  SDL_DestroyWindow(myPSDL_Window);
   SDL_Quit();
 end;
 
 function SetUpSDLStandAlone(swidth, sheight: integer): integer;
 begin
   Result := -1;
-  G_screen := SDL_CreateWindow('Fplay', SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, swidth, sheight, SDL_WINDOW_OPENGL);
-  if not Assigned(G_screen) then Exit(7);
-  G_renderer := SDL_CreateRenderer(G_screen, -1, SDL_RENDERER_ACCELERATED);
-  if not Assigned(G_renderer) then Exit(8);
-  G_texture := SDL_CreateTexture(G_renderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING or SDL_TEXTUREACCESS_TARGET, swidth, sheight);
-  if not Assigned(G_texture) then Exit(9);
+  myPSDL_Window := SDL_CreateWindow('Fplay', SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, swidth, sheight, SDL_WINDOW_OPENGL);
+  if not Assigned(myPSDL_Window) then Exit(7);
+  myPSDL_Renderer := SDL_CreateRenderer(myPSDL_Window, -1, SDL_RENDERER_ACCELERATED);
+  if not Assigned(myPSDL_Renderer) then Exit(8);
+  myPSDL_Texture := SDL_CreateTexture(myPSDL_Renderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING or SDL_TEXTUREACCESS_TARGET, swidth, sheight);
+  if not Assigned(myPSDL_Texture) then Exit(9);
   G_rect.x := 0;
   G_rect.y := 0;
   G_rect.w := swidth;
   G_rect.h := sheight;
 
-  G_TargetRect:=G_rect;
+  G_TargetRect := G_rect;
 
-  G_windowID := SDL_GetWindowID(G_screen);
+  G_windowID := SDL_GetWindowID(myPSDL_Window);
 end;
 
 function SetUpSDLEmbedded(swidth, sheight: integer): integer;
 begin
   Result := -1;
-  G_screen := SDL_CreateWindowFrom(pointer(form1.Panel1.Handle));
-  G_renderer := SDL_CreateRenderer(G_screen, -1, SDL_RENDERER_ACCELERATED);
-  G_texture := SDL_CreateTexture(G_renderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING or SDL_TEXTUREACCESS_TARGET, swidth, sheight);
+  myPSDL_Window := SDL_CreateWindowFrom(pointer(form1.Panel1.Handle));
+  myPSDL_Renderer := SDL_CreateRenderer(myPSDL_Window, -1, SDL_RENDERER_ACCELERATED);
+  myPSDL_Texture := SDL_CreateTexture(myPSDL_Renderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING or SDL_TEXTUREACCESS_TARGET, swidth, sheight);
 
   G_rect.x := 0;
   G_rect.y := 0;
   G_rect.w := swidth;
   G_rect.h := sheight;
-  G_TargetRect:=G_rect;
-  G_TargetRect.w:=form1.panel1.Width;
-  G_TargetRect.h:=form1.panel1.Height;
+  G_TargetRect := G_rect;
+  G_TargetRect.w := form1.panel1.Width;
+  G_TargetRect.h := form1.panel1.Height;
 
 
-  G_windowID := SDL_GetWindowID(G_screen);
+  G_windowID := SDL_GetWindowID(myPSDL_Window);
 end;
 
+ function GetStreamIDs01(locPAVFormatContext: PAVFormatContext; out vidId, audId: integer; out myPAVCodecContext_v, myPAVCodecContext_a: PAVCodecContext): integer;
+var  {in GetStreamIDs version2 I use av_find_best_stream}
+  i: integer;
+  myPAVCodec_v: PAVCodec;
+  myPAVCodec_a: PAVCodec;
+begin
+  Result := -1;
+  if (avformat_find_stream_info(locPAVFormatContext, nil) < 0) then Exit(2);
+  vidId := -1; audId := -1;
 
-
+  for i := 0 to locPAVFormatContext^.nb_streams - 1 do
+    if (locPAVFormatContext^.streams[i]^.codecpar^.codec_type = AVMEDIA_TYPE_VIDEO) then
+      if (vidId = -1) then vidId := i;
+  myPAVCodec_v := avcodec_find_decoder(locPAVFormatContext^.streams[vidId]^.codecpar^.codec_id);
+  myPAVCodecContext_v := avcodec_alloc_context3(myPAVCodec_v);
+  form1.edit2.Caption := myPAVCodec_v^.long_name;
+  if (avcodec_parameters_to_context(myPAVCodecContext_v, locPAVFormatContext^.streams[vidId]^.codecpar) < 0) then Exit(3);
+  if (avcodec_open2(myPAVCodecContext_v, myPAVCodec_v, nil) < 0) then Exit(5);
+  for i := 0 to locPAVFormatContext^.nb_streams - 1 do
+    if (locPAVFormatContext^.streams[i]^.codecpar^.codec_type = AVMEDIA_TYPE_AUDIO) then
+      if (audId = -1) then audId := i;
+  myPAVCodec_a := avcodec_find_decoder(locPAVFormatContext^.streams[audId]^.codecpar^.codec_id);
+  myPAVCodecContext_a := avcodec_alloc_context3(myPAVCodec_a);
+  form1.edit1.Caption := myPAVCodec_a^.long_name;
+  if (avcodec_parameters_to_context(myPAVCodecContext_a, locPAVFormatContext^.streams[audId]^.codecpar) < 0) then Exit(4);
+  if (avcodec_open2(myPAVCodecContext_a, myPAVCodec_a, nil) < 0) then  Exit(6);
+end;
 
 
 {decode and main2 below: never got it to work using parse...}

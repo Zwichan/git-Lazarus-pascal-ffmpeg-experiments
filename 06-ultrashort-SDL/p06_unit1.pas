@@ -3,7 +3,7 @@ unit p06_unit1;
 interface
 uses
   Classes, SysUtils, Forms, Controls, Dialogs, StdCtrls, ExtCtrls, ComCtrls,
-  SDL2, dateutils, libavformat, libavutil,libavcodec_codec_par, libavcodec_codec, libavcodec_packet,
+  SDL2, dateutils, libavformat, libavutil, libavcodec_codec_par, libavcodec_codec, libavcodec_packet,
   libavutil_rational, libavutil_error, Windows, Graphics, libavcodec, libavutil_frame;
 type
   TForm1 = class(TForm)
@@ -39,17 +39,20 @@ var
   TimerStartTick: int64;
   QPF1000: int64;//queryperformanceFrequency;
 begin
-filename := '.\big-buck-bunny-1080p-60fps-30s.mp4';
+  filename := '.\big-buck-bunny-1080p-60fps-30s.mp4';
   Result := 0;
   QueryPerformanceFrequency(QPF1000);
   QPF1000 := round(QPF1000 / 1000);
   myPAVFormatContext := avformat_alloc_context();
   avformat_open_input(@myPAVFormatContext, filename, nil, nil);
+
   vidId := av_find_best_stream(myPAVFormatContext, AVMEDIA_TYPE_VIDEO, -1, -1, @myPAVCodec, 0);   {=find_stream_info + find_decoder}
   Timebase := av_q2d(myPAVFormatContext^.streams[vidId]^.time_base);
   myPAVCodecContext := avcodec_alloc_context3(myPAVCodec);
   avcodec_parameters_to_context(myPAVCodecContext, myPAVFormatContext^.streams[vidId]^.codecpar);
   avcodec_open2(myPAVCodecContext, myPAVCodec, nil);
+
+
   vheight := myPAVFormatContext^.streams[vidId]^.codecpar^.Height;
   vwidth := myPAVFormatContext^.streams[vidId]^.codecpar^.Width;
   SDL_Init(SDL_INIT_VIDEO);    {SDL init}
