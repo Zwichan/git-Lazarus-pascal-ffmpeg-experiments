@@ -1,12 +1,13 @@
 object Form1: TForm1
-  Left = 787
+  Left = 1244
   Height = 1131
-  Top = 178
+  Top = 163
   Width = 1453
   Caption = 'ffmpeg decoding with SDL display - just a study to show what I found and help along..'
   ClientHeight = 1131
   ClientWidth = 1453
   DesignTimePPI = 120
+  OnCreate = FormCreate
   LCLVersion = '2.1.0.0'
   object Button1: TButton
     Left = 27
@@ -18,13 +19,15 @@ object Form1: TForm1
     TabOrder = 0
   end
   object Memo1: TMemo
-    Left = 1021
-    Height = 189
-    Top = 191
-    Width = 407
+    Left = 19
+    Height = 206
+    Top = 387
+    Width = 1358
+    Font.Name = 'DejaVu Sans Mono'
     Lines.Strings = (
       'Memo1'
     )
+    ParentFont = False
     TabOrder = 1
   end
   object GroupBox1: TGroupBox
@@ -170,9 +173,9 @@ object Form1: TForm1
     TabOrder = 9
   end
   object Panel1: TPanel
-    Left = 103
-    Height = 703
-    Top = 390
+    Left = 44
+    Height = 353
+    Top = 745
     Width = 1216
     Caption = 'Panel1'
     TabOrder = 10

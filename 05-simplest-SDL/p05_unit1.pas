@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, Forms, Controls, Dialogs, StdCtrls, ExtCtrls, ComCtrls,
   Grids, SDL2, dateutils, libavformat, libavutil, fftypes,
   libavcodec_codec_par, libavcodec_codec, libavcodec_packet,
-  libavutil_rational, libavutil_error, Windows, Graphics, libavcodec, libavutil_frame;
+  libavutil_rational, libavutil_error, Windows, Graphics, libavcodec, libavutil_frame,libavutil_log;
 type
 
   { TForm1 }
@@ -29,6 +29,7 @@ type
     StringGrid1: TStringGrid;
     StringGrid2: TStringGrid;
     procedure Button1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     procedure ShowDLLInfo;
 
@@ -68,6 +69,26 @@ function SetUpSDLEmbedded(swidth, sheight: integer): integer;
 implementation
 
 {$R *.lfm}
+
+procedure avlog_callback(ptr: Pointer; level: Integer; const fmt: PAnsiChar; vl: PAnsiChar); cdecl;
+const
+  ss:string=''; {is like static variable, kind of global and also local}
+Var
+  line: array [0 .. 1023] of AnsiChar;
+  print_prefix: Integer;
+begin
+  print_prefix := 1;
+  av_log_format_line2(ptr, level, fmt, vl, line, sizeof(line), @print_prefix);
+  ss:=ss+line;
+  if ss.EndsWith(#10) then
+    begin
+      ss:=TrimRight(ss);
+      if ss<>'' then
+        form1.memo1.Lines.add(ss);
+      ss:='';
+    end;
+end;
+
 procedure sdl_zero(var x: Pointer; size: SizeUInt);
 begin
   SDL_memset(x, 0, size);
@@ -120,6 +141,7 @@ var
   myPAVCodecContext_v, myPAVCodecContext_a: PAVCodecContext;
   ret: integer;
   vheight, vwidth: integer;
+
 begin
   QueryPerformanceFrequency(G_QPF1000);
   G_QPF1000 := round(G_QPF1000 / 1000);
@@ -127,6 +149,11 @@ begin
   Result := 0;
   myPAVFormatContext := avformat_alloc_context();
   if (avformat_open_input(@myPAVFormatContext, filename, nil, nil) < 0) then Exit(1);
+
+   av_log_set_callback(@avlog_callback);
+  av_dump_format(myPAVFormatContext, 0, filename, 0);
+   av_log_set_callback(nil);
+
   ret := GetStreamIDs02(myPAVFormatContext, vidId, audId, myPAVCodecContext_v, myPAVCodecContext_a); if ret <> -1 then Exit(ret);  {vidId, audId are out values to get}
 
 
@@ -322,6 +349,10 @@ begin
   SDL_Quit();
 end;
 
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+end;
+
 function SetUpSDLStandAlone(swidth, sheight: integer): integer;
 begin
   Result := -1;
@@ -429,7 +460,6 @@ begin
   Result := True;
 end;
 
-
-
+initialization
 
 end.

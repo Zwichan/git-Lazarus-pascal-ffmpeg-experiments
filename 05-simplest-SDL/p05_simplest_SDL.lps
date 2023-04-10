@@ -8,8 +8,8 @@
       <Unit>
         <Filename Value="p05_simplest_SDL.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="2"/>
-        <CursorPos X="58" Y="12"/>
+        <EditorIndex Value="4"/>
+        <CursorPos X="30" Y="17"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -20,13 +20,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="201"/>
-        <CursorPos X="48" Y="223"/>
+        <TopLine Value="31"/>
+        <CursorPos Y="55"/>
         <UsageCount Value="200"/>
         <Bookmarks Count="3">
-          <Item0 Y="52" ID="3"/>
-          <Item1 Y="324" ID="2"/>
-          <Item2 X="3" Y="127" ID="1"/>
+          <Item0 Y="53" ID="3"/>
+          <Item1 Y="354" ID="2"/>
+          <Item2 Y="152" ID="1"/>
         </Bookmarks>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -35,225 +35,225 @@
         <Filename Value="sdl.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="176" Y="4"/>
-        <UsageCount Value="45"/>
+        <UsageCount Value="44"/>
       </Unit>
       <Unit>
         <Filename Value="sdlvideo.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="179" Y="4"/>
-        <UsageCount Value="45"/>
+        <UsageCount Value="44"/>
       </Unit>
       <Unit>
         <Filename Value="sdlevents.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="548"/>
         <CursorPos X="3" Y="563"/>
-        <UsageCount Value="45"/>
+        <UsageCount Value="44"/>
       </Unit>
       <Unit>
         <Filename Value="sdlaudio.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="121"/>
         <CursorPos Y="136"/>
-        <UsageCount Value="43"/>
+        <UsageCount Value="42"/>
       </Unit>
       <Unit>
         <Filename Value="libavformat.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2428"/>
         <CursorPos X="10" Y="2450"/>
-        <UsageCount Value="40"/>
+        <UsageCount Value="39"/>
       </Unit>
       <Unit>
         <Filename Value="libswresample.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="273"/>
         <CursorPos X="10" Y="295"/>
-        <UsageCount Value="39"/>
+        <UsageCount Value="38"/>
       </Unit>
       <Unit>
         <Filename Value="libavcodec.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2720"/>
         <CursorPos X="10" Y="2744"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="37"/>
       </Unit>
       <Unit>
         <Filename Value="libavcodec_codec.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="223"/>
         <CursorPos X="3" Y="245"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="37"/>
       </Unit>
       <Unit>
         <Filename Value="H:\fpc64\3.2.0\source\rtl\inc\ctypes.pp"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="27"/>
         <CursorPos X="140" Y="40"/>
-        <UsageCount Value="36"/>
+        <UsageCount Value="35"/>
       </Unit>
       <Unit>
         <Filename Value="libavutil_samplefmt.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="85"/>
         <CursorPos X="44" Y="98"/>
-        <UsageCount Value="29"/>
+        <UsageCount Value="28"/>
       </Unit>
       <Unit>
         <Filename Value="sdl2.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="72"/>
         <CursorPos X="2" Y="94"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="27"/>
       </Unit>
       <Unit>
         <Filename Value="libavutil_frame.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="738"/>
         <CursorPos Y="762"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="26"/>
       </Unit>
       <Unit>
         <Filename Value="H:\fpc64\3.2.0\source\rtl\inc\systemh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="86"/>
         <CursorPos X="19" Y="109"/>
-        <UsageCount Value="69"/>
+        <UsageCount Value="68"/>
       </Unit>
       <Unit>
         <Filename Value="F:\Downloads\sdl2_ffmpeg_player_006\units\uexplayer.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1437"/>
         <CursorPos X="62" Y="1460"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="..\SombysSources\lazarus\common\uexplayer.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="4118"/>
         <CursorPos X="25" Y="4183"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="libavfilter.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="64"/>
         <CursorPos X="7" Y="220"/>
-        <UsageCount Value="15"/>
+        <UsageCount Value="14"/>
       </Unit>
       <Unit>
         <Filename Value="libavutil_pixfmt.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="633"/>
         <CursorPos Y="663"/>
-        <UsageCount Value="8"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="sdlrenderer.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="73"/>
         <CursorPos Y="95"/>
-        <UsageCount Value="3"/>
+        <UsageCount Value="2"/>
       </Unit>
       <Unit>
         <Filename Value="libavutil_mathematics.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="104"/>
         <CursorPos Y="110"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\shared\leosfftypes.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="827"/>
         <CursorPos X="160" Y="839"/>
-        <UsageCount Value="3"/>
+        <UsageCount Value="2"/>
       </Unit>
       <Unit>
         <Filename Value="..\shared\leoscodeccontext.pas"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="libavutil.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="88" Y="5"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="libavutil_buffer.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="104"/>
         <CursorPos Y="113"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="sdlrect.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="44"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\shared\shortfftypes.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="53" Y="16"/>
-        <UsageCount Value="80"/>
+        <UsageCount Value="79"/>
       </Unit>
       <Unit>
         <Filename Value="..\ffmpeg-delphi-pascal-headers-5.0\libavformat.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="934"/>
         <CursorPos Y="957"/>
-        <UsageCount Value="50"/>
+        <UsageCount Value="49"/>
       </Unit>
       <Unit>
         <Filename Value="..\ffmpeg-delphi-pascal-headers-5.0\libversion.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3"/>
         <CursorPos X="46" Y="203"/>
-        <UsageCount Value="50"/>
+        <UsageCount Value="49"/>
       </Unit>
       <Unit>
         <Filename Value="..\ffmpeg-delphi-pascal-headers-5.0\libavcodec.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="268"/>
         <CursorPos X="18" Y="296"/>
-        <UsageCount Value="48"/>
+        <UsageCount Value="47"/>
       </Unit>
       <Unit>
         <Filename Value="..\ffmpeg-delphi-pascal-headers-5.0\libavcodec_codec.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="402"/>
         <CursorPos X="45" Y="443"/>
-        <UsageCount Value="43"/>
+        <UsageCount Value="42"/>
       </Unit>
       <Unit>
         <Filename Value="..\ffmpeg-delphi-pascal-headers-5.0\libavcodec_codec_defs.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="55"/>
         <CursorPos X="3" Y="79"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="37"/>
       </Unit>
       <Unit>
         <Filename Value="H:\fpc64\3.2.0\source\rtl\win\wininc\func.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="234"/>
         <CursorPos X="10" Y="260"/>
-        <UsageCount Value="52"/>
+        <UsageCount Value="51"/>
       </Unit>
       <Unit>
         <Filename Value="H:\fpc64\3.2.0\source\rtl\win\wininc\base.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="48"/>
         <CursorPos X="19" Y="71"/>
-        <UsageCount Value="52"/>
+        <UsageCount Value="51"/>
       </Unit>
       <Unit>
         <Filename Value="H:\fpc64\3.2.0\source\rtl\win\wininc\struct.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2218"/>
         <CursorPos X="6" Y="2241"/>
-        <UsageCount Value="52"/>
+        <UsageCount Value="51"/>
       </Unit>
       <Unit>
         <Filename Value="R:\OneDrive\_LAZARUS\VideoGPT03\unit1.pas"/>
@@ -264,7 +264,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="295"/>
         <CursorPos X="5" Y="311"/>
-        <UsageCount Value="43"/>
+        <UsageCount Value="42"/>
       </Unit>
       <Unit>
         <Filename Value="H:\LAZARUST64\config\onlinepackagemanager\packages\bgrabitmap-master\bgrabitmap\bgradefaultbitmap.pas"/>
@@ -272,12 +272,12 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1642"/>
         <CursorPos X="3" Y="1646"/>
-        <UsageCount Value="36"/>
+        <UsageCount Value="35"/>
       </Unit>
       <Unit>
         <Filename Value="H:\LAZARUST64\config\onlinepackagemanager\packages\bgrabitmap-master\bgrabitmap\bgrapixel.inc"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="36"/>
+        <UsageCount Value="35"/>
       </Unit>
       <Unit>
         <Filename Value="R:\OneDrive\_LAZARUS\openGltest2\unit1.pas"/>
@@ -285,12 +285,12 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="13" Y="36"/>
-        <UsageCount Value="34"/>
+        <UsageCount Value="33"/>
       </Unit>
       <Unit>
         <Filename Value="..\SDL2-units\sdl2.pas"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="34"/>
+        <UsageCount Value="33"/>
       </Unit>
       <Unit>
         <Filename Value="H:\LAZARUST64\config\onlinepackagemanager\packages\bgrabitmap-master\bgrabitmap\bgraopengltype.pas"/>
@@ -298,48 +298,64 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1699"/>
         <CursorPos Y="1704"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="27"/>
       </Unit>
       <Unit>
         <Filename Value="H:\LAZARUST64\config\onlinepackagemanager\packages\bgrabitmap-master\bgrabitmap\bgraopengl.pas"/>
         <UnitName Value="BGRAOpenGL"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="92"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="23"/>
       </Unit>
       <Unit>
         <Filename Value="..\SDL2-units\sdlvideo.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="672"/>
         <CursorPos X="9" Y="681"/>
-        <UsageCount Value="18"/>
+        <UsageCount Value="17"/>
       </Unit>
       <Unit>
         <Filename Value="..\SDL2-units\sdlrenderer.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="482"/>
         <CursorPos X="134" Y="500"/>
-        <UsageCount Value="17"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="..\SDL2-units\sdlrect.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="45"/>
-        <UsageCount Value="16"/>
+        <UsageCount Value="15"/>
       </Unit>
       <Unit>
         <Filename Value="..\SDL2-units\sdlsurface.inc"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="86"/>
         <CursorPos X="25" Y="92"/>
-        <UsageCount Value="18"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\06-ultrashort-SDL\p06_unit1.pas"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="26"/>
         <CursorPos Y="49"/>
+        <UsageCount Value="16"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="H:\fpc64\3.2.0\source\rtl\win\wininc\redef.inc"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="310"/>
+        <CursorPos X="10" Y="331"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\ffmpeg-delphi-pascal-headers-5.0\libavutil_log.pas"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="214"/>
+        <CursorPos X="14" Y="224"/>
         <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit>
@@ -347,123 +363,123 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="146" Column="131" TopLine="134"/>
+        <Caret Line="85" TopLine="74"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="154" Column="113" TopLine="134"/>
+        <Caret Line="90" TopLine="74"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="151" Column="16" TopLine="143"/>
+        <Caret Line="88" TopLine="74"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="157" TopLine="143"/>
+        <Caret Line="85" TopLine="74"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="158" TopLine="143"/>
+        <Caret Line="88" TopLine="74"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="134" Column="21" TopLine="109"/>
+        <Caret Line="85" TopLine="74"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="137" Column="43" TopLine="112"/>
+        <Caret Line="97" Column="101" TopLine="74"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="149" Column="13" TopLine="127"/>
+        <Caret Line="87" Column="13" TopLine="74"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="65" Column="137" TopLine="43"/>
+        <Caret Line="90" Column="18" TopLine="69"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="154" Column="77" TopLine="135"/>
+        <Caret Line="94" Column="10" TopLine="63"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="92" Column="113" TopLine="67"/>
+        <Caret Line="97" Column="14" TopLine="72"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="106" Column="66" TopLine="79"/>
+        <Caret Line="95" Column="12" TopLine="72"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="142" Column="22" TopLine="118"/>
+        <Caret Line="97" Column="4" TopLine="72"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="154" Column="77" TopLine="127"/>
+        <Caret Line="92" Column="6" TopLine="72"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="158" Column="76" TopLine="143"/>
+        <Caret Line="99" Column="17" TopLine="72"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="190" Column="89" TopLine="179"/>
+        <Caret Line="97" TopLine="80"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="199" Column="44" TopLine="179"/>
+        <Caret Line="94" Column="50" TopLine="72"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="112" Column="15" TopLine="87"/>
+        <Caret Line="92" Column="22" TopLine="70"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="110" Column="105" TopLine="87"/>
+        <Caret Line="97" TopLine="70"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="65" Column="104" TopLine="40"/>
+        <Caret Line="99" TopLine="70"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="110" Column="104" TopLine="85"/>
+        <Caret Line="97" TopLine="70"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="65" Column="106" TopLine="40"/>
+        <Caret Line="99" TopLine="70"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="123" Column="97" TopLine="97"/>
+        <Caret Line="97" TopLine="70"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="125" Column="15" TopLine="100"/>
+        <Caret Line="99" TopLine="70"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="96" Column="32" TopLine="88"/>
+        <Caret Line="97" Column="12" TopLine="67"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="115" Column="68" TopLine="105"/>
+        <Caret Line="98" TopLine="67"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="131" Column="33" TopLine="108"/>
+        <Caret Line="94" Column="14" TopLine="69"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="66" Column="47" TopLine="41"/>
+        <Caret Line="89" TopLine="72"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="124" TopLine="66"/>
+        <Caret Line="78" Column="25" TopLine="56"/>
       </Position>
       <Position>
         <Filename Value="p05_unit1.pas"/>
-        <Caret Line="88" Column="19" TopLine="63"/>
+        <Caret Line="56" Column="18" TopLine="31"/>
       </Position>
     </JumpHistory>
     <RunParams>

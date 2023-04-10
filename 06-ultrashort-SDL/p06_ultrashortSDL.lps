@@ -8,7 +8,7 @@
       <Unit>
         <Filename Value="p06_ultrashortSDL.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <CursorPos X="32" Y="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -19,9 +19,8 @@
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="45"/>
-        <CursorPos X="78" Y="13"/>
+        <TopLine Value="56"/>
+        <CursorPos X="75" Y="80"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -196,7 +195,7 @@
       </Unit>
       <Unit>
         <Filename Value="..\ffmpeg-delphi-pascal-headers-5.0\libavformat.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="2497"/>
         <CursorPos X="10" Y="2514"/>
         <UsageCount Value="53"/>
@@ -319,7 +318,7 @@
       </Unit>
       <Unit>
         <Filename Value="..\SDL2-units\sdlrect.inc"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <TopLine Value="24"/>
         <CursorPos X="12" Y="44"/>
         <UsageCount Value="17"/>
@@ -327,10 +326,20 @@
       </Unit>
       <Unit>
         <Filename Value="..\SDL2-units\sdlsurface.inc"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="86"/>
         <CursorPos X="25" Y="92"/>
         <UsageCount Value="19"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="F:\Downloads\DrangerTutorial08.c2FPC.lpr\DrangerTutorial08.c2FPC.lpr"/>
+        <UnitName Value="FFPlay2FPC_01"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="1267"/>
+        <CursorPos X="12" Y="5"/>
+        <UsageCount Value="10"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>

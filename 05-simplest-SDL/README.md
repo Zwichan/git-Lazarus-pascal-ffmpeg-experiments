@@ -2,6 +2,7 @@
 
 With SDL2 I can reach 140 fps on i7 2600K with Radeon 570. The fastest of all experiments.
 This code is just to show you what I have come up with after searching and experimenting. I am no expert in this field, it just might help you along...
+Now including demonstration of av_log_set_callback to log the ffmpeg messages inside the API GUI application (I tried piping of stdout and stderr, did not work...)
 
 Clear from this: SDL is the simplest and fastest...
 

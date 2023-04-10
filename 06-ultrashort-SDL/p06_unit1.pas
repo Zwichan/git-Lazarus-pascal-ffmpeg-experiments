@@ -38,6 +38,7 @@ var
   TimeNow: int64;
   TimerStartTick: int64;
   QPF1000: int64;//queryperformanceFrequency;
+  RunningFrameCount:integer=0;
 begin
   filename := '.\big-buck-bunny-1080p-60fps-30s.mp4';
   Result := 0;
@@ -68,12 +69,15 @@ begin
   begin
     if myPAVPacket^.stream_index = vidId then
     begin
+      Inc(RunningFrameCount);
       if avcodec_send_packet(myPAVCodecContext, myPAVPacket) < 0 then  Continue; {next iteration if not succesful}
       if avcodec_receive_frame(myPAVCodecContext, myPAVFrame) < 0 then  Continue;
       SDL_UpdateYUVTexture(myPSDL_Texture, @SourceRect, myPAVFrame^.Data[0], myPAVFrame^.linesize[0], myPAVFrame^.Data[1], myPAVFrame^.linesize[1], myPAVFrame^.Data[2], myPAVFrame^.linesize[2]);
       SDL_RenderClear(myPSDL_Renderer);
       SDL_RenderCopy(myPSDL_Renderer, myPSDL_Texture, nil, @TargetRect);
       SDL_RenderPresent(myPSDL_Renderer);
+      if RunningFrameCount mod 20=0 then
+      Application.ProcessMessages; {I really need this...else freezing...}
       QueryPerformanceCounter(TimeNow);
       TimeDiff := (myPAVFrame^.best_effort_timestamp * 1000 * Timebase) - ((TimeNow - TimerStartTick) / QPF1000);
       if TimeDiff > 0 then
